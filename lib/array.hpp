@@ -1,5 +1,6 @@
-#define LENGTH 10
-
+void shuffle(int arr[], int len);
+int random(int arr[], int len, int min, int max);
 void bubbleSort(int array[], int length, bool crescente);
-void sortMatrix(int** mat, int lin, int col);
-void arrayRandom(int array[], int length, int min, int max);
+int* transporMat(int** mat, int* lin, int* col);
+int** sortMatrix(int** mat, int* lin, int* col);
+int binarySearch(int* arr, int* len, int* num);

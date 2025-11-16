@@ -7,10 +7,6 @@
 
 using std::string, std::ifstream, std::ofstream, std::cout, std::endl;
 
-// LOCAL DOS ARQUIVOS
-string ESCRITA = "arquivo.txt";
-string LEITURA = "arquivo.txt";
-
 // Captura uma palavra de uma linha com base na posicao da ocorrencia e no
 // offset de palavras desejado Modificar para funcionamento com offset negativo
 string capturaPalavra(string line, size_t posOcorrencia, int offsetPalavras) {
@@ -33,8 +29,8 @@ string capturaPalavra(string line, size_t posOcorrencia, int offsetPalavras) {
     return line.substr(posPalavra, lenPalavra);
 }
 
-int readFile(leituraOpcoes opt, string valores[1], int valLen) {
-    ifstream arq(LEITURA);
+int readFile(string leitura, leituraOpcoes opt, string valores[1], int valLen) {
+    ifstream arq(leitura);
 
     if (!arq.is_open()) {
         cout << "erro: falha na abertura do arquivo" << endl;
@@ -63,8 +59,9 @@ int readFile(leituraOpcoes opt, string valores[1], int valLen) {
     return 0;
 }
 
-int writeFile(std::string arr[], int len) {
-    ofstream arq(ESCRITA, std::ios::app); // Modo de escrita no arquivo esta como append
+int writeFile(string escrita, string valores[], int len) {
+    ofstream arq(escrita, std::ios::app); // Modo de escrita no arquivo esta como append
+    // ofstream arq(escrita, std::ios::out); // Modo de escrita no arquivo como replace
 
     if (!arq.is_open()) {
         cout << "erro: falha na abertura do arquivo";
@@ -72,7 +69,7 @@ int writeFile(std::string arr[], int len) {
     }
 
     for (int i = 0; i < len; i++) {
-        arq << arr[i] << ',';
+        arq << valores[i] << ',';
     }
     arq << endl;
 

@@ -1,0 +1,1 @@
+int diagonais(int** mat, int* lin, int* col, int* princ, int* secund, int* abaixoDP, int* acimaDP, int* abaixoDS, int* acimaDS);
