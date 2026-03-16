@@ -20,7 +20,7 @@ struct Stack{
 
 template<typename T>
 void deleteStack(Stack<T> *stack) {
-    while (! isEmpty(&stack)) {
+    while (! isEmpty(stack)) {
         pop(&stack);
     }
 }
@@ -46,7 +46,7 @@ template<typename T>
 T pop(Stack<T> *stack) {
     T data = nullptr;
     
-    if (isEmpty(&stack)) {
+    if (isEmpty(stack)) {
         return data;
     }
 
@@ -62,7 +62,7 @@ template<typename T>
 T peek(Stack<T> *stack) {
     T data = nullptr;
 
-    if (isEmpty(&stack)) {
+    if (isEmpty(stack)) {
         return data;
     }
 
