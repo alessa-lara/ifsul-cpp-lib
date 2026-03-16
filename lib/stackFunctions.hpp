@@ -5,8 +5,7 @@
 
 #include <string>
 
-// Checks if the string parentheses when opened are properly closed, aka balanced
-bool balancedString(std::string expression) {
+bool balancedParenthesesString(std::string expression) {
     Stack<char> stack;
     newStack(&stack, expression.size());
 

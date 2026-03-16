@@ -1,5 +1,5 @@
-#ifndef DYN_STACK
-#define DYN_STACK
+#ifndef STACK_DYN
+#define STACK_DYN
 
 #include <iostream>
 template<typename T>
