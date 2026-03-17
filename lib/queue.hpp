@@ -32,7 +32,6 @@ bool isInit(Queue<T>* queue) {
     return true;
 }
 
-// responsabilidade do dev: nao remover a fila se nao tiver sido inicializada
 template <typename T>
 void deleteQueue(Queue<T>* queue) {
     queue->capacity = 0;
@@ -64,7 +63,6 @@ bool isFull(Queue<T>* queue) {
     return true;
 }
 
-// verificacao se a fila esta cheia ou inicializada e responsabilidade do dev
 template <typename T>
 void enqueue(Queue<T>* queue, T val) {
     if (!isInit(queue)) {
