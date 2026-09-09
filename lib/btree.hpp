@@ -68,7 +68,6 @@ struct Binary_Tree {
             current->left = remove(val, current->left);
         else if ( val > current->data )
             current->right = remove(val, current->right);
-
         else {
             if ( current->left == nullptr && current->right == nullptr ) {
                 delete current;
@@ -219,6 +218,20 @@ struct Binary_Tree {
         left->right = node;
 
         return left;
+    }
+
+    int nodes_in_tree(Node<T>* node) {
+        if (node == nullptr)
+            return 0;
+
+        int left = height_subtree(node->left);
+        int right = height_subtree(node->right);
+
+        if (left == right)
+            return ( 1 << left ) - 1;
+        else {
+            return 1 + nodes_in_tree(node->left) + nodes_in_tree(node->right);
+        }
     }
 };
 

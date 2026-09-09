@@ -16,6 +16,7 @@ int main() {
     t.search(1, t.root);
     t.remove(1, t.root);
 
+    std::cout << t.nodes_in_tree(t.root) << "\n";
 
     std::cout << "\n";
     t.pre_order(t.root);
