@@ -41,12 +41,11 @@ struct Binary_Tree {
         delete this->root;
     }
 
-    Node<T>* insert(T val, Node<T>*& current) {
-        if ( this->root == nullptr ) {
-            this->root = new Node<T>(val);
-            return nullptr;
-        }
+    void insert(T val) {
+        this->root = insert(val, this->root);
+    }
 
+    Node<T>* insert(T val, Node<T>*& current) {
         if ( current == nullptr )
             return new Node<T>(val);
 
@@ -55,13 +54,15 @@ struct Binary_Tree {
         else if ( val >= current->data )
             current->right = insert(val, current->right);
 
-        balance_node(current);
+        return balance_node(current);
+    }
 
-        return current;
+    void remove(T val) {
+        this->root = remove(val, this->root);
     }
 
     Node<T>* remove(T val, Node<T>*& current) {
-        if ( this->search(val, this->root) == false )
+        if (current == nullptr)
             return nullptr;
 
         if ( val < current->data )
@@ -76,12 +77,14 @@ struct Binary_Tree {
 
             if ( current->left == nullptr ) {
                 Node<T>* aux = current->right;
+                current->right = nullptr;
                 delete current;
                 return aux;
             }
 
             if ( current->right == nullptr ) {
                 Node<T>* aux = current->left;
+                current->left = nullptr;
                 delete current;
                 return aux;
             }
@@ -95,9 +98,7 @@ struct Binary_Tree {
             current->left = remove(aux->data, current->left);
         }
 
-        balance_node(current);
-
-        return current;
+        return balance_node(current);
     }
 
     void in_order(Node<T>* node) {
@@ -180,21 +181,21 @@ struct Binary_Tree {
 
     Node<T>* balance_node(Node<T>*& node) {
         // LL - left left
-        if (balance_factor(node) > 1 && balance_factor(node->left) >= 0)
+        if ( balance_factor(node) > 1 && balance_factor(node->left) >= 0 )
             return rotate_right(node);
 
         // LR - left right
-        if (balance_factor(node) > 1 && balance_factor(node->left) < 0) {
+        if ( balance_factor(node) > 1 && balance_factor(node->left) < 0 ) {
             node->left = rotate_left(node->left);
             return rotate_right(node);
         }
 
         // RR - right right
-        if (balance_factor(node) < -1 && balance_factor(node->right) <= 0)
+        if ( balance_factor(node) < -1 && balance_factor(node->right) <= 0 )
             return rotate_left(node);
 
         // RL - right left
-        if (balance_factor(node) < -1 && balance_factor(node->right) > 0) {
+        if ( balance_factor(node) < -1 && balance_factor(node->right) > 0 ) {
             node->right = rotate_right(node->right);
             return rotate_left(node);
         }
@@ -203,7 +204,7 @@ struct Binary_Tree {
     }
 
     Node<T>* rotate_left(Node<T>*& node) {
-        Node<T>*& right = node->right;
+        Node<T>* right = node->right;
 
         node->right = right->left;
         right->left = node;
@@ -212,7 +213,7 @@ struct Binary_Tree {
     }
 
     Node<T>* rotate_right(Node<T>*& node) {
-        Node<T>*& left = node->left;
+        Node<T>* left = node->left;
 
         node->left = left->right;
         left->right = node;
@@ -221,17 +222,38 @@ struct Binary_Tree {
     }
 
     int nodes_in_tree(Node<T>* node) {
-        if (node == nullptr)
+        if ( node == nullptr )
             return 0;
 
         int left = height_subtree(node->left);
         int right = height_subtree(node->right);
 
-        if (left == right)
-            return ( 1 << left ) - 1;
+        if ( left == right )
+            return (2 << left) - 1;
         else {
             return 1 + nodes_in_tree(node->left) + nodes_in_tree(node->right);
         }
+    }
+
+    int nodes_at_level(Node<T>* node, int target) {
+        if ( node == nullptr )
+            return 0;
+
+        if ( target != 0 )
+            return nodes_at_level(node->left, target - 1) + nodes_at_level(node->right, target - 1);
+        else
+            return 1;
+    }
+
+    void print_per_level(Node<T>* node, int target, int level = 0) {
+        if (node == nullptr)
+            return;
+
+        if (target != 0) {
+            print_per_level(node->left, target - 1, level + 1);
+            print_per_level(node->right, target - 1, level + 1);
+        } else
+            cout << "L" << level << ":"<< node->data << ", ";
     }
 };
 
