@@ -62,7 +62,7 @@ struct Binary_Tree {
     }
 
     Node<T>* remove(T val, Node<T>*& current) {
-        if (current == nullptr)
+        if ( current == nullptr )
             return nullptr;
 
         if ( val < current->data )
@@ -246,14 +246,14 @@ struct Binary_Tree {
     }
 
     void print_per_level(Node<T>* node, int target, int level = 0) {
-        if (node == nullptr)
+        if ( node == nullptr )
             return;
 
-        if (target != 0) {
+        if ( target != 0 ) {
             print_per_level(node->left, target - 1, level + 1);
             print_per_level(node->right, target - 1, level + 1);
         } else
-            cout << "L" << level << ":"<< node->data << ", ";
+            cout << "L" << level << ":" << node->data << ", ";
     }
 };
 
