@@ -6,22 +6,22 @@
 using namespace std;
 
 struct edgenode {
-    int y;
+    int v;
     int weight;
     struct edgenode* next;
 
-    edgenode(int weight, int y, edgenode* next) {
+    edgenode(int weight, int v, edgenode* next) {
         this->weight = weight;
-        this->y = y;
+        this->v = v;
         this->next = next;
     }
 };
 
 struct graph {
-    edgenode* edges[MAXVERTICES + 1]; // linked list variant of this
-    int degree[MAXVERTICES + 1];      // TODO! linked list variant of this
-    int nVertices;                    // number of vertices in the graph
-    int nEdges;                       // number of edges in the graph
+    edgenode* edges[MAXVERTICES + 1];
+    int degree[MAXVERTICES + 1];
+    int nVertices; // number of vertices in the graph
+    int nEdges;    // number of edges in the graph
     bool directed;
 
     graph(bool directed) {
@@ -42,21 +42,53 @@ struct graph {
 
     void read_graph() {
         int nEdges;
-        int x;
-        int y;
+        int u;
+        int v;
 
         cin >> this->nVertices;
         cin >> nEdges;
 
         for ( int i = 0; i < nEdges; i++ ) {
-            cin >> x;
-            cin >> y;
+            cin >> u;
+            cin >> v;
 
-            this->insertEdge(x, y);
+            this->insert_edge(u, v);
         }
     }
 
-    void insertEdge(int x, int y) {
-        edgenode* edge = new edgenode(0, y, this->edges[x]);
+    void insert_edge(int u, int v) {
+        edgenode* edge = new edgenode(0, v, this->edges[u]);
+
+        this->edges[u] = edge;
+        this->degree[u]++;
+
+        if ( !this->directed )
+            this->insert_edge(v, u);
+        else
+            this->nEdges++;
     };
+
+    void print_graph() {
+        edgenode* edge;
+
+        for ( int i = 0; i < this->nVertices + 1; i++ ) {
+            cout << i << ":";
+            edge = this->edges[i];
+
+            while ( edge != nullptr ) {
+                cout << edge->v;
+                edge = edge->next;
+            }
+
+            cout << "\n";
+        }
+    }
+
+    void remove_edge() {
+        edgenode* edge;
+
+        // go to edges[u] and for each node v we check edges[v], remove u from the list and subtract the degree, subtract nedges, nvertices is a problem so we can do a tombstone in the degree[u]
+        // this would only work for undirected graphs, which is what we're making this so its ok
+
+    }
 };
