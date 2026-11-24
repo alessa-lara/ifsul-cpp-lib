@@ -6,13 +6,13 @@
 using namespace std;
 
 struct Edgenode {
-    int value;
+    char v;
     int weight;
-    struct Edgenode* next;
+    Edgenode* next;
 
-    Edgenode(int weight, int value, Edgenode* next) {
+    Edgenode(int weight, int v, Edgenode* next) {
         this->weight = weight;
-        this->value = value;
+        this->v = v;
         this->next = next;
     }
 };
@@ -23,11 +23,13 @@ struct Graph {
     int n_vertices;
     int n_edges;
     bool directed;
+    bool alphabetical;
 
-    Graph(bool directed) {
+    Graph(bool directed, bool alphabetical) {
         this->n_vertices = 0;
         this->n_edges = 0;
         this->directed = directed;
+        this->alphabetical = alphabetical;
 
         for ( int i = 0; i < MAXVERTICES; i++ )
             this->degree[i] = 0;
@@ -40,8 +42,8 @@ struct Graph {
 
     void insert() {
         int n_edges;
-        int u;
-        int v;
+        char u;
+        char v;
 
         cin >> this->n_vertices;
         cin >> n_edges;
@@ -50,31 +52,44 @@ struct Graph {
             cin >> u;
             cin >> v;
 
+            if ( this->alphabetical ) {
+                u = toupper(u);
+                v = toupper(v);
+                u -= 'A';
+                v -= 'A';
+            }
+
             this->insert_edge(u, v, this->directed);
         }
     }
 
-    void insert_edge(int u, int v, bool directed) {
+    void insert_edge(char u, char v, bool directed) {
         Edgenode* edge = new Edgenode(0, v, this->edges[u]);
 
         this->edges[u] = edge;
         this->degree[u]++;
 
-        if ( !directed )
-            this->insert_edge(v, u, true);
-        else
+        if ( directed )
             this->n_edges++;
+        else
+            this->insert_edge(v, u, true);
     };
 
     void print_graph() {
         Edgenode* edge;
 
-        for ( int i = 0; i < this->n_vertices + 1; i++ ) {
-            cout << i << ":";
+        for ( int i = 0; i < this->n_vertices; i++ ) {
+            cout << char(i + 'A') << ": ";
             edge = this->edges[i];
 
             while ( edge != nullptr ) {
-                cout << edge->value;
+                cout << "{ w = " << edge->weight << ", v = ";
+
+                if ( this->alphabetical )
+                    cout << char(edge->v + 'A') << "}, ";
+                else
+                    cout << char(edge->v) << "}, ";
+
                 edge = edge->next;
             }
 
