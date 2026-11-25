@@ -1,17 +1,22 @@
 // adjacency list implementation of a graph
 
+#ifndef GRAPH_HPP
+#define GRAPH_HPP
+
 #include <iostream>
 #define MAXVERTICES 100
 
 using namespace std;
 
 struct Edgenode {
+    char u;
     char v;
     int weight;
     Edgenode* next;
 
-    Edgenode(int weight, int v, Edgenode* next) {
+    Edgenode(int weight, char u, char v, Edgenode* next) {
         this->weight = weight;
+        this->u = u;
         this->v = v;
         this->next = next;
     }
@@ -38,10 +43,24 @@ struct Graph {
             this->edges[i] = nullptr;
     }
 
-    ~Graph() {}
+    ~Graph() {
+        Edgenode* del;
+        Edgenode* next;
+
+        for ( int i = 0; i < n_vertices; i++ ) {
+            next = this->edges[i];
+
+            while ( next != nullptr ) {
+                del = next;
+                next = del->next;
+                delete del;
+            }
+        }
+    }
 
     void insert() {
         int n_edges;
+        int weight;
         char u;
         char v;
 
@@ -49,6 +68,7 @@ struct Graph {
         cin >> n_edges;
 
         for ( int i = 0; i < n_edges; i++ ) {
+            cin >> weight;
             cin >> u;
             cin >> v;
 
@@ -59,20 +79,22 @@ struct Graph {
                 v -= 'A';
             }
 
-            this->insert_edge(u, v, this->directed);
+            this->insert_edge(weight, u, v, this->directed);
         }
     }
 
-    void insert_edge(char u, char v, bool directed) {
-        Edgenode* edge = new Edgenode(0, v, this->edges[u]);
+    void insert_edge(int weight, char u, char v, bool directed) {
+        Edgenode* edge = new Edgenode(weight, u, v, this->edges[u]);
 
         this->edges[u] = edge;
         this->degree[u]++;
 
         if ( directed )
             this->n_edges++;
-        else
-            this->insert_edge(v, u, true);
+        else {
+            this->n_edges++;
+            this->insert_edge(weight, v, u, true);
+        }
     };
 
     void print_graph() {
@@ -105,63 +127,4 @@ struct Graph {
     }
 };
 
-struct DisjointSet {
-    int* parent_index; // array storing the parent of a given node
-    int* size_subtree; // array storing the size of each subtree
-    int size_universe;
-
-    DisjointSet(int size_universe) {
-        this->parent_index = new int[size_universe];
-        this->size_subtree = new int[size_universe];
-        this->size_universe = size_universe;
-
-        for ( int i = 0; i < size_universe; i++ ) {
-            this->parent_index[i] = i; // each node is in a separate subtree
-            this->size_subtree[i] = 1;
-        };
-    }
-
-    int find(int x) {
-        // go upwards until you find the root of the tree containing element x
-        if ( this->parent_index[x] == x )
-            return x;
-
-        return find(this->parent_index[x]);
-    }
-
-    void merge(int element_a, int element_b) {
-        int root_a;
-        int root_b;
-
-        root_a = this->find(element_a);
-        root_b = this->find(element_b);
-
-        if ( root_a == root_b )
-            return; // already in the same set
-
-        int size_subtree_a = this->size_subtree[root_a];
-        int size_subtree_b = this->size_subtree[root_b];
-
-        if ( size_subtree_a >= size_subtree_b ) { // merge set b into a
-            this->size_subtree[root_a] = size_subtree_a + size_subtree_b;
-            this->parent_index[root_b] = root_a;
-
-            /*
-             * size_subtree[root_b] is intentionally left stale as root_b is no longer a root
-             * and therefore cannot be accessed through find(). the stale value is unreachable.
-             * the same applies to size_subtree[root_a] in the else branch.
-             */
-
-        } else { // merge set a into b
-            this->size_subtree[root_b] = size_subtree_a + size_subtree_b;
-            this->parent_index[root_a] = root_b;
-        }
-    }
-
-    bool same_set(int element_a, int element_b) {
-        int root_a = find(element_a);
-        int root_b = find(element_b);
-
-        return root_a == root_b;
-    }
-};
+#endif

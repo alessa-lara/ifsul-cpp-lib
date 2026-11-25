@@ -4,3 +4,4 @@ set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(dlist doublyLinkedList.cpp lib/doublyLinkedList.hpp)
 add_executable(btree btree.cpp lib/btree.hpp)
+add_executable(graph graph.cpp lib/graph.hpp)
