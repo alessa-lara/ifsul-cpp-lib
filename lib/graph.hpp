@@ -61,25 +61,32 @@ struct Graph {
     void insert() {
         int n_edges;
         int weight;
-        char u;
-        char v;
+        int u;
+        int v;
+        char char_u;
+        char char_v;
 
         cin >> this->n_vertices;
         cin >> n_edges;
 
         for ( int i = 0; i < n_edges; i++ ) {
             cin >> weight;
-            cin >> u;
-            cin >> v;
 
             if ( this->alphabetical ) {
-                u = toupper(u);
-                v = toupper(v);
-                u -= 'A';
-                v -= 'A';
-            }
+                cin >> char_u;
+                cin >> char_v;
+                char_u = toupper(char_u);
+                char_v = toupper(char_v);
+                u = char_u - 'A';
+                v = char_v - 'A';
 
-            this->insert_edge(weight, u, v, this->directed);
+                this->insert_edge(weight, u, v, this->directed);
+            } else {
+                cin >> u;
+                cin >> v;
+
+                this->insert_edge(weight, u, v, this->directed);
+            }
         }
     }
 
